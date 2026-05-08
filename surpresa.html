@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surpresa</title>
+    <!-- Bibliotecas Externas -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --rose: #ff4d6d;
+            --wine: #800e13;
+            --cream: rgba(255, 245, 245, 0.9); /* Adicionado transparência para ver o fundo */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000; /* Fundo base preto para o overlay */
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Camada de Imagens de Fundo */
+        .bg-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Fica atrás de tudo */
+            display: flex;
+            flex-wrap: wrap;
+            filter: brightness(0.5); /* Escurece as fotos para o texto brilhar */
+        }
+
+        .bg-photo {
+            flex: 1 1 50%; /* Divide em grade, você pode ajustar */
+            height: 50vh;
+            background-size: cover;
+            background-position: center;
+            animation: fadeInOut 10s infinite alternate;
+        }
+
+        @keyframes fadeInOut {
+            from { opacity: 0.6; transform: scale(1); }
+            to { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* Partículas de Coração */
+        .heart-particle {
+            position: absolute;
+            color: var(--rose);
+            font-size: 15px;
+            pointer-events: none;
+            z-index: 5;
+            animation: moveHearts 4s linear forwards;
+        }
+
+        @keyframes moveHearts {
+            to { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .card {
+            background: var(--cream);
+            backdrop-filter: blur(5px); /* Efeito de vidro fosco */
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 85%;
+            z-index: 10;
+            border: 2px solid #ffccd5;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--wine);
+            margin-bottom: 10px;
+        }
+
+        .hidden { display: none; }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 20px 0;
+            border: 2px solid #ffccd5;
+            border-radius: 15px;
+            outline: none;
+            text-align: center;
+        }
+
+        button {
+            background: var(--rose);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        button:hover { transform: scale(1.05); background: var(--wine); }
+
+        .vale-tudo {
+            background: rgba(255, 240, 243, 0.9);
+            border: 3px dashed var(--rose);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CONTAINER DE FOTOS (Usando arquivos locais) -->
+    <div class="bg-background">
+        <div class="bg-photo" style="background-image: url('fotos/foto1.JPEG');"></div>
+        <div class="bg-photo" style="background-image: url('fotos/foto2.JPEG');"></div>
+        <div class="bg-photo" style="background-image: url('fotos/foto3.JPEG');"></div>
+        <div class="bg-photo" style="background-image: url('fotos/foto4.JPEG');"></div>
+    </div>
+
+   <!-- Música de fundo local -->
+    <audio id="bgMusic" loop>
+        <source src="audio/quesorteanossa.mp3" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+
+    <div id="step1" class="card animate__animated animate__zoomIn">
+        <h1>Oi, meu AMOZI!</h1>
+        <p>Preparei essa surpresinha pra ver se tu tá sabendo onde tu tá! Se tu souber tudinho tem uma surpresa no final! (tá difícil) ❤️</p>
+        <button onclick="startExperience()">Tenta amor</button>
+    </div>
+
+    <div id="step2" class="card hidden animate__animated">
+        <h1 id="qTitle">Pergunta 1</h1>
+        <p id="qText">Carregando...</p>
+        <input type="text" id="answerInput" placeholder="Sua resposta...">
+        <br>
+        <button onclick="checkAnswer()">Próxima</button>
+    </div>
+
+    <div id="step3" class="card hidden animate__animated">
+        <h1>Meu amor arrasou!</h1>
+        <div class="vale-tudo">
+            <h2 style="color: var(--wine); margin: 5px 0;">🎫 VALE TUDO</h2>
+            <p>Escolher qualquer coisa para o dia:</p>
+            <h3 style="color: var(--rose); font-size: 1.5rem; margin: 10px 0;">23 de Maio</h3>
+        </div>
+        <p style="margin-top: 15px; font-style: italic;">"Onde eu te escolhi amar pra toda vida ..."</p>
+    </div>
+
+    <script>
+        const music = document.getElementById('bgMusic');
+        const questions = [
+            { q: "Qual dia eu disse que eu te amava?", a: "24/09" },
+            { q: "Qual dia a gente foi pegar Lilezona?", a: "15/11" },
+            { q: "Promete me amar pra sempre?", a: "sim" }
+        ];
+        let currentQ = 0;
+
+        function startExperience() {
+            // Garante que o áudio seja carregado e tocado
+            music.load(); 
+            music.play().then(() => {
+                console.log("Música iniciada com sucesso!");
+            }).catch((error) => {
+                console.log("Erro ao tocar música: ", error);
+            });
+            
+            createHearts();
+            transition('step1', 'step2');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            document.getElementById('qTitle').innerText = `Pergunta ${currentQ + 1}`;
+            document.getElementById('qText').innerText = questions[currentQ].q;
+            document.getElementById('answerInput').value = "";
+        }
+
+        function checkAnswer() {
+            const val = document.getElementById('answerInput').value.toLowerCase().trim();
+            if(val.includes(questions[currentQ].a)) {
+                currentQ++;
+                if(currentQ < questions.length) {
+                    loadQuestion();
+                } else {
+                    transition('step2', 'step3');
+                }
+            } else {
+                alert("Errou, amor! Mas tenta de novo ❤️");
+            }
+        }
+
+        function transition(oldId, newId) {
+            const oldEl = document.getElementById(oldId);
+            const newEl = document.getElementById(newId);
+            oldEl.classList.add('animate__fadeOut');
+            setTimeout(() => {
+                oldEl.classList.add('hidden');
+                newEl.classList.remove('hidden');
+                newEl.classList.add('animate__fadeInUp');
+            }, 500);
+        }
+
+        function createHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.classList.add('heart-particle');
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 4000);
+            }, 300);
+        }
+    </script>
+</body>
+</html>
